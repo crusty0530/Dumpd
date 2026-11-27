@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: dumpd
+      POSTGRES_PASSWORD: dumpd_dev_password
+      POSTGRES_DB: dumpd
+    ports:
+      - "5432:5432"
+    volumes:
+      - "dumpd_pgdata:/var/lib/postgresql"
+
+volumes:
+  dumpd_pgdata:
