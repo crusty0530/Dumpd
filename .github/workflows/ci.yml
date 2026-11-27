@@ -8,7 +8,7 @@ on:
 
 jobs:
     backend:
-        runs-on: unbuntu-latest
+        runs-on: ubuntu-latest
         defaults:
             run:
                 working-directory: backend
@@ -23,4 +23,4 @@ jobs:
                 cache-dependency-path: backend/go.sum
 
             - name: Run tests with coverage
-              run: go test ./.. -coverprofile=coverage.out
+              run: go test ./... -coverprofile=coverage.out
