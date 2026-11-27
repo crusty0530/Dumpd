@@ -1,0 +1,25 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+
+jobs:
+    backend:
+        runs-on: unbuntu-latest
+        defaults:
+            run:
+                working-directory: backend
+        steps:
+            - uses: actions/checkout@v6
+              with:
+                fetch-depth: 0 # full history; Sonar needs this
+
+            - uses: actions/setup-go@v6
+              with:
+                go-version-file: backend/go.mod
+                cache-dependency-path: backend/go.sum
+
+            - name: Run tests with coverage
+              run: go test ./.. -coverprofile=coverage.out
