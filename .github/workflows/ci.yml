@@ -9,6 +9,20 @@ on:
 jobs:
     backend:
         runs-on: ubuntu-latest
+        services:
+            postgres:
+                image: postgres:18
+                env:
+                    POSTGRES_USER: dumpd
+                    POSTGRES_PASSWORD: dumpd_test_password
+                    POSTGRES_DB: dumpd_test
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 5s
+                    --health-timeout 5s
+                    --health-retries 5
         defaults:
             run:
                 working-directory: backend
@@ -24,7 +38,9 @@ jobs:
 
             - name: Run tests with coverage
               run: go test ./... -coverprofile=coverage.out
-            
+              env:
+                TEST_DATABASE_URL: postgres://dumpd:dumpd_test_password@localhost:5432/dumpd_test?sslmode=disable
+
             - name: SonarQube Cloud scan
               uses: SonarSource/sonarqube-scan-action@70bad232163b09d998ea0707ee80c0ec80798c16 # v8.5.1
               env:
