@@ -1,3 +1,5 @@
+-- +goose Up
+
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuidv7(),
     username    TEXT NOT NULL UNIQUE,
@@ -22,3 +24,8 @@ CREATE TABLE sessions (
 );
 
 CREATE INDEX sessions_user_id_idx ON sessions (user_id);
+
+-- +goose Down
+
+DROP TABLE sessions;
+DROP TABLE users;

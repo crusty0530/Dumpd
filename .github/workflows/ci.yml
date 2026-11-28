@@ -9,6 +9,8 @@ on:
 jobs:
     backend:
         runs-on: ubuntu-latest
+        env:
+            TEST_DATABASE_URL: postgres://dumpd:dumpd_test_password@localhost:5432/dumpd_test?sslmode=disable
         services:
             postgres:
                 image: postgres:18
@@ -36,10 +38,11 @@ jobs:
                 go-version-file: backend/go.mod
                 cache-dependency-path: backend/go.sum
 
+            - name: Run database migrations
+              run: go run github.com/pressly/goose/v3/cmd/goose@v3.30.2 -dir migrations postgres "$TEST_DATABASE_URL" up
+
             - name: Run tests with coverage
               run: go test ./... -coverprofile=coverage.out
-              env:
-                TEST_DATABASE_URL: postgres://dumpd:dumpd_test_password@localhost:5432/dumpd_test?sslmode=disable
 
             - name: SonarQube Cloud scan
               uses: SonarSource/sonarqube-scan-action@70bad232163b09d998ea0707ee80c0ec80798c16 # v8.5.1
